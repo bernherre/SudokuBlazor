@@ -408,10 +408,6 @@ C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\wwwroot\_
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\wwwroot\_framework\Sudoku.Web.wasm.gz
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\wwwroot\_framework\Sudoku.Web.pdb.gz
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\wwwroot\_framework\blazor.boot.json.gz
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\publish\web.config
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\publish\Sudoku.Web.runtimeconfig.json
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\publish\Sudoku.Web.staticwebassets.endpoints.json
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\publish\wwwroot\sample-data\weather.json
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\Sudoku.Web.staticwebassets.runtime.json
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\Sudoku.Web.staticwebassets.endpoints.json
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\bin\Release\net8.0\Sudoku.Web.dll
@@ -1035,6 +1031,6 @@ C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\Sudoku.We
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\refint\Sudoku.Web.dll
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\Sudoku.Web.pdb
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\ref\Sudoku.Web.dll
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\compressed\7z9v14lj92-{0}-zg0txqem7e-zg0txqem7e.gz
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\compressed\mhx2v7gv2g-{0}-2r8hzt33ht-2r8hzt33ht.gz
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\compressed\jpductffj3-{0}-n2hjlq2adi-n2hjlq2adi.gz
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\compressed\7z9v14lj92-{0}-3dym710g42-3dym710g42.gz
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\compressed\mhx2v7gv2g-{0}-e0k8km0d9z-e0k8km0d9z.gz
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Release\net8.0\compressed\jpductffj3-{0}-x8onpvwwnf-x8onpvwwnf.gz

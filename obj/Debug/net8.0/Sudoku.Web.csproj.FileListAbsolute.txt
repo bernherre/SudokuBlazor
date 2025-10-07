@@ -1025,9 +1025,6 @@ C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\1o7q62bnho-{0}-tptq2av103-tptq2av103.gz
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\x7oo4lb9kv-{0}-lfu7j35m59-lfu7j35m59.gz
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\x5wbq09ymk-{0}-oyz0vx2fzb-oyz0vx2fzb.gz
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\7z9v14lj92-{0}-r96sbj5iip-r96sbj5iip.gz
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\mhx2v7gv2g-{0}-x1b20vpstp-x1b20vpstp.gz
-C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\jpductffj3-{0}-9uzmgv5xio-9uzmgv5xio.gz
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\staticwebassets.development.json
@@ -1038,3 +1035,6 @@ C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\Sudoku.Web.
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\refint\Sudoku.Web.dll
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\Sudoku.Web.pdb
 C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\ref\Sudoku.Web.dll
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\7z9v14lj92-{0}-8pe4h3e7x0-8pe4h3e7x0.gz
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\mhx2v7gv2g-{0}-wsr8szt32b-wsr8szt32b.gz
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net8.0\compressed\jpductffj3-{0}-otg032gdqn-otg032gdqn.gz
