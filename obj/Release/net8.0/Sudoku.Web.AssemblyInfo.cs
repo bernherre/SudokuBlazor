@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sudoku.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d6676d78fc9ce63f66c78a30016b505da57f674e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8bb6c2ba8a7be41adf9692b26a2b4f4386a3c432")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sudoku.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sudoku.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

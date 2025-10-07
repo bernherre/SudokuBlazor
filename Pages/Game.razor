@@ -1,4 +1,4 @@
-ï»¿@page "/game"
+@page "/game"
 @using Sudoku.Web.Services
 @using Sudoku.Web.Components
 @inject SudokuService SudokuService
@@ -83,8 +83,8 @@ else
         }
 
         ErrorMask = null;                           // limpia rojos
-        Message = "SoluciÃ³n completada.";
-        Timer.Stop();                               // pausa el cronÃ³metro al resolver
+        Message = "Solución completada.";
+        Timer.Stop();                               // pausa el cronómetro al resolver
         StateHasChanged();
     }
 
@@ -108,7 +108,7 @@ else
 
         var result = SudokuService.ValidateDetailed(Board!);
 
-        // pintar mÃ¡scara de errores
+        // pintar máscara de errores
         var n = Board!.GetLength(0);
         var mask = new bool[n, n];
         foreach (var (r, c) in result.Conflicts)
@@ -118,10 +118,10 @@ else
         if (!result.IsValid)
             Message = $"Hay {result.Conflicts.Count} casilla(s) en conflicto. Corrige las marcadas en rojo.";
         else if (!result.IsComplete)
-            Message = "Â¡Vas bien! No hay conflictos, pero aÃºn faltan celdas por completar.";
+            Message = "¡Vas bien! No hay conflictos, pero aún faltan celdas por completar.";
         else
         {
-            Message = "ðŸŽ‰ Â¡Tablero correcto y completo!";
+            Message = "?? ¡Tablero correcto y completo!";
             Timer.Stop();
         }
         StateHasChanged();
@@ -140,7 +140,7 @@ else
             {
                 Board[r, c] = _solution[r, c];
                 ErrorMask = null; // limpia rojos para revalidar
-                Message = "Se rellenÃ³ una pista.";
+                Message = "Se rellenó una pista.";
                 StateHasChanged();
                 return;
             }
