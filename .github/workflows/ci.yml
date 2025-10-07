@@ -23,4 +23,4 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Publish
-        run: dotnet publish ./Sudoku.Web/Sudoku.Web.csproj -c Release -o build
+        run: dotnet publish ./Sudoku.Web.csproj -c Release -o build
