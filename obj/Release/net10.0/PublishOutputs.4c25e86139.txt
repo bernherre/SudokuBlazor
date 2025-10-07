@@ -1,0 +1,3 @@
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\publish\Sudoku.Web.runtimeconfig.json
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\publish\dotnet.js
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\publish\web.config

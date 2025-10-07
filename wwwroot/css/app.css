@@ -1,0 +1,61 @@
+﻿.sudoku-board {
+    border-collapse: collapse;
+    margin: 16px 0;
+    table-layout: fixed;
+}
+
+    .sudoku-board td {
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        border: 1px solid #000;
+    }
+
+        /* Borde grueso entre cajas */
+        .sudoku-board td:nth-child(3n) {
+            border-right: 2px solid #000;
+        }
+
+    .sudoku-board tr:nth-child(3n) td {
+        border-bottom: 2px solid #000;
+    }
+
+/* Celdas */
+.cell {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 1.1rem;
+    border: none;
+    outline: none;
+}
+
+    .cell.fixed {
+        background-color: #eee;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cell.editable {
+        background-color: #fff;
+    }
+
+    .cell.invalid {
+        background-color: #ffe9e9 !important;
+        box-shadow: inset 0 0 0 2px #c00;
+    }
+
+/* Asegura que las vacías sigan mostrando borde */
+.cell-container {
+    background: white;
+}
+.sudoku-board td:nth-child(3n) {
+    border-right: 2px solid #000;
+}
+
+.sudoku-board tr:nth-child(2n) td {
+    border-bottom: 2px solid #000;
+}

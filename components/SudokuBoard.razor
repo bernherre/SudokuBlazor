@@ -1,0 +1,125 @@
+@using Microsoft.AspNetCore.Components
+@namespace Sudoku.Web.Components
+
+@if (Board is null || FixedCells is null)
+{
+    <text></text>
+}
+else
+{
+    <table class="sudoku-board" style="border-spacing:0; table-layout:fixed; margin:16px 0;">
+        @for (int i = 0; i < Board.GetLength(0); i++)
+        {
+            <tr>
+                @for (int j = 0; j < Board.GetLength(1); j++)
+                {
+                    var ri = i; var cj = j;
+                    bool isInvalid = Errors is not null && Errors[ri, cj];
+                    bool isFixed   = FixedCells[ri, cj];
+                    int  v         = Board[ri, cj];
+
+                    <td style="padding:0;">
+                        <!-- Dibujamos los bordes en línea para que SIEMPRE se vean -->
+                        <div style="@CellFrameStyle(ri, cj)">
+                            @if (isFixed)
+                            {
+                                <div class="@($"cell fixed{(isInvalid ? " invalid" : "")}")">@v</div>
+                            }
+                            else
+                            {
+                                <input type="number"
+                                       min="1" max="@Board.GetLength(0)"
+                                       inputmode="numeric" pattern="[0-9]*"
+                                       class="@($"cell editable{(isInvalid ? " invalid" : "")}")"
+                                       value="@(v == 0 ? (int?)null : v)"
+                                       @onchange="(e => OnChange(ri, cj, e))"
+                                       @onkeydown="(e => OnKey(ri, cj, e))" />
+
+                            }
+                        </div>
+                    </td>
+                }
+            </tr>
+        }
+    </table>
+}
+
+@code {
+    [Parameter] public int[,]? Board { get; set; }
+    [Parameter] public bool[,]? FixedCells { get; set; }
+    [Parameter] public bool[,]? Errors { get; set; }
+    [Parameter] public EventCallback<int[,]> BoardChanged { get; set; }
+    ElementReference[,]? _refs;
+
+    protected override void OnParametersSet()
+    {
+        if (Board is null) return;
+        _refs = new ElementReference[Board.GetLength(0), Board.GetLength(1)];
+    }
+
+    private async Task OnKey(int r, int c, KeyboardEventArgs e)
+    {
+        if (_refs is null) return;
+        int n = Board!.GetLength(0);
+        int nr = r, nc = c;
+        switch (e.Key)
+        {
+            case "ArrowUp":    nr = Math.Max(0, r - 1); break;
+            case "ArrowDown":  nr = Math.Min(n - 1, r + 1); break;
+            case "ArrowLeft":  nc = Math.Max(0, c - 1); break;
+            case "ArrowRight": nc = Math.Min(n - 1, c + 1); break;
+            case "Backspace":
+            case "Delete":
+                await OnChange(r, c, new ChangeEventArgs { Value = "" });
+                return;
+            default: return;
+        }
+        await _refs![nr, nc].FocusAsync();
+    }
+
+
+
+    private async Task OnChange(int r, int c, ChangeEventArgs e)
+    {
+        if (Board is null) return;
+
+        if (int.TryParse(e.Value?.ToString(), out var v) && v >= 1 && v <= Board.GetLength(0))
+            Board[r, c] = v;
+        else
+            Board[r, c] = 0;
+
+        await BoardChanged.InvokeAsync(Board);
+    }
+
+    // Estilo inline para el marco de cada celda (ancho/alto + bordes finos y gruesos)
+    private string CellFrameStyle(int r, int c)
+    {
+        var n = Board!.GetLength(0);
+        var (br, bc) = GetBoxDims(n);
+
+        // base
+        var s = "box-sizing:border-box;width:48px;height:48px;border:1px solid #333;";
+
+        // marco exterior
+        if (r == 0)     s += "border-top-width:2px;border-top-color:#000;";
+        if (r == n-1)   s += "border-bottom-width:2px;border-bottom-color:#000;";
+        if (c == 0)     s += "border-left-width:2px;border-left-color:#000;";
+        if (c == n-1)   s += "border-right-width:2px;border-right-color:#000;";
+
+        // límites de sub-bloques
+        if (r % br == 0)         s += "border-top-width:2px;border-top-color:#000;";
+        if (r % br == br - 1)    s += "border-bottom-width:2px;border-bottom-color:#000;";
+        if (c % bc == 0)         s += "border-left-width:2px;border-left-color:#000;";
+        if (c % bc == bc - 1)    s += "border-right-width:2px;border-right-color:#000;";
+
+        return s;
+    }
+
+    private static (int br, int bc) GetBoxDims(int size) => size switch
+    {
+        4 => (2, 2),
+        6 => (2, 3),
+        9 => (3, 3),
+        _ => (2, 2)
+    };
+}

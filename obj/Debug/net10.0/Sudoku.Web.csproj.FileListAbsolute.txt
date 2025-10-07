@@ -1,0 +1,10 @@
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\EmbeddedAttribute.cs
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\ValidatableTypeAttribute.cs
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\Sudoku.Web.csproj.AssemblyReference.cache
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\Sudoku.Web.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\Sudoku.Web.AssemblyInfoInputs.cache
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\Sudoku.Web.AssemblyInfo.cs
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\Sudoku.Web.csproj.CoreCompileInputs.cache
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\Sudoku.Web.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\bernh\source\repos\SudokuBlazor\Sudoku.Web\obj\Debug\net10.0\Sudoku.Web.sourcelink.json

@@ -1,0 +1,27 @@
+@namespace Sudoku.Web.Components
+
+<input type="number"
+       min="1" max="@MaxValue"
+       class="@Css"
+       value="@DisplayValue"
+       @onchange="OnChange"
+       disabled="@IsFixed" />
+
+@code {
+    [Parameter] public int Value { get; set; }
+    [Parameter] public int MaxValue { get; set; }
+    [Parameter] public bool IsFixed { get; set; }
+    [Parameter] public bool IsInvalid { get; set; }
+    [Parameter] public EventCallback<int> ValueChanged { get; set; }
+
+    private string Css => $"{(IsFixed ? "cell fixed" : "cell editable")}{(IsInvalid ? " invalid" : "")}";
+    private string? DisplayValue => Value == 0 ? null : Value.ToString();
+
+    private async Task OnChange(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var v) && v >= 1 && v <= MaxValue)
+            await ValueChanged.InvokeAsync(v);
+        else
+            await ValueChanged.InvokeAsync(0);
+    }
+}

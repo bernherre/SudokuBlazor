@@ -1,0 +1,157 @@
+﻿@page "/game"
+@using Sudoku.Web.Services
+@using Sudoku.Web.Components
+@inject SudokuService SudokuService
+@inject TimerService Timer
+
+<h3>Sudoku</h3>
+
+<select @bind="Size" @bind:after="NewGame">
+    <option value="4">4x4</option>
+    <option value="6">6x6</option>
+    <option value="9">9x9</option>
+</select>
+
+<select @bind="Difficulty" @bind:after="NewGame">
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+</select>
+
+<button class="btn" @onclick="NewGame">New Game</button>
+<button class="btn" @onclick="CheckBoard" disabled="@(!HasBoard)">Check</button>
+<button class="btn" @onclick="Hint" disabled="@(!HasBoard)">Hint</button>
+<button class="btn" @onclick="ShowSolution" disabled="@(!HasBoard)">Solution</button>
+
+@if (HasBoard)
+{
+    <p><strong>Board:</strong> @Board!.GetLength(0) x @Board!.GetLength(1)</p>
+    <SudokuBoard Board="Board"
+                 FixedCells="FixedCells"
+                 Errors="ErrorMask"
+                 BoardChanged="OnBoardChanged" />
+}
+else
+{
+    <p>Choose options and start a game.</p>
+}
+
+<p>@Message</p>
+<p>Time: @Timer.Seconds s</p>
+
+@code {
+    private int Size { get; set; } = 6;
+    private string Difficulty { get; set; } = "medium";
+
+    private int[,]? Board;
+    private bool[,]? FixedCells;
+    private bool[,]? ErrorMask;
+    private int[,]? _solution;
+
+    private string Message = "";
+    private bool HasBoard => Board is not null && FixedCells is not null;
+
+    private Action? _tickHandler;
+
+    protected override void OnInitialized()
+    {
+        _tickHandler = () => InvokeAsync(StateHasChanged);
+        Timer.OnTick += _tickHandler!;
+        Timer.Start();
+        NewGame();
+    }
+
+    void NewGame()
+    {
+        (Board, FixedCells, _solution) = SudokuService.GenerateBoard(Size, Difficulty);
+        ErrorMask = null;
+        Message = "";
+        Timer.Stop(); Timer.Start();
+        StateHasChanged();
+    }
+
+    void ShowSolution()
+    {
+        if (!HasBoard || _solution is null) return;
+
+        int n = Board!.GetLength(0);
+        for (int r = 0; r < n; r++)
+        for (int c = 0; c < n; c++)
+        {
+            if (!FixedCells![r, c])                 // solo sobre las editables
+                Board[r, c] = _solution[r, c];      // coloca el valor correcto
+        }
+
+        ErrorMask = null;                           // limpia rojos
+        Message = "Solución completada.";
+        Timer.Stop();                               // pausa el cronómetro al resolver
+        StateHasChanged();
+    }
+
+
+    void OnBoardChanged(int[,] newBoard)
+    {
+        Board = newBoard;
+        // Autocheck con debounce ligero
+        _debounce?.Stop();
+        _debounce ??= new System.Timers.Timer(300) { AutoReset = false };
+        _debounce.Elapsed -= DebouncedCheck;
+        _debounce.Elapsed += DebouncedCheck;
+        _debounce.Start();
+    }
+    System.Timers.Timer? _debounce;
+    void DebouncedCheck(object? s, System.Timers.ElapsedEventArgs e) => InvokeAsync(CheckBoard);
+
+    void CheckBoard()
+    {
+        if (!HasBoard) return;
+
+        var result = SudokuService.ValidateDetailed(Board!);
+
+        // pintar máscara de errores
+        var n = Board!.GetLength(0);
+        var mask = new bool[n, n];
+        foreach (var (r, c) in result.Conflicts)
+            mask[r, c] = true;
+        ErrorMask = mask;
+
+        if (!result.IsValid)
+            Message = $"Hay {result.Conflicts.Count} casilla(s) en conflicto. Corrige las marcadas en rojo.";
+        else if (!result.IsComplete)
+            Message = "¡Vas bien! No hay conflictos, pero aún faltan celdas por completar.";
+        else
+        {
+            Message = "🎉 ¡Tablero correcto y completo!";
+            Timer.Stop();
+        }
+        StateHasChanged();
+    }
+
+    void Hint()
+    {
+        if (!HasBoard || _solution is null) return;
+
+        int n = Board!.GetLength(0);
+        for (int r = 0; r < n; r++)
+        for (int c = 0; c < n; c++)
+        {
+            if (!FixedCells![r, c] &&
+               (Board[r, c] == 0 || (ErrorMask != null && ErrorMask[r, c])))
+            {
+                Board[r, c] = _solution[r, c];
+                ErrorMask = null; // limpia rojos para revalidar
+                Message = "Se rellenó una pista.";
+                StateHasChanged();
+                return;
+            }
+        }
+        Message = "No hay celdas disponibles para pista.";
+    }
+
+    public void Dispose()
+    {
+        _debounce?.Dispose();
+        Timer.Stop();
+        if (_tickHandler is not null) Timer.OnTick -= _tickHandler;
+    }
+}

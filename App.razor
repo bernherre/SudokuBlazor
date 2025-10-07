@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Components.Routing
+@using Sudoku.Web.Shared
+
+
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+
+@code {
+    // Cuando hay coincidencia de ruta, renderiza RouteView con MainLayout
+    private RenderFragment<RouteData> FoundContent => routeData => builder =>
+    {
+        builder.OpenComponent<RouteView>(0);
+        builder.AddAttribute(1, "RouteData", routeData);
+        builder.AddAttribute(2, "DefaultLayout", typeof(MainLayout));
+        builder.CloseComponent();
+    };
+
+    // Cuando NO hay coincidencia, muestra LayoutView con el mensaje
+    private RenderFragment NotFoundContent => builder =>
+    {
+        builder.OpenComponent<LayoutView>(0);
+        builder.AddAttribute(1, "Layout", typeof(MainLayout));
+        builder.AddAttribute(2, "ChildContent", (RenderFragment)(b =>
+        {
+            b.AddMarkupContent(0, "<p role=\"alert\">Sorry, there's nothing at this address.</p>");
+        }));
+        builder.CloseComponent();
+    };
+}

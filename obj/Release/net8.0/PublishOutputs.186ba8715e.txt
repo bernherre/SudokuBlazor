@@ -1,0 +1,6 @@
+C:\Users\bernh\source\repos\SudokuBlazor\publish\publish\web.config
+C:\Users\bernh\source\repos\SudokuBlazor\publish\publish\Sudoku.Web.runtimeconfig.json
+C:\Users\bernh\source\repos\SudokuBlazor\publish\publish\Sudoku.Web.staticwebassets.endpoints.json
+C:\Users\bernh\source\repos\SudokuBlazor\publish\publish\wwwroot\sample-data\weather.json
+C:\Users\bernh\source\repos\SudokuBlazor\publish\emcc-props.json
+C:\Users\bernh\source\repos\SudokuBlazor\publish\web.config
