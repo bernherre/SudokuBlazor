@@ -104,7 +104,6 @@ select, button {
     padding: 6px 10px;
     margin-right: 6px;
 }
-
 @media (max-width: 420px) {
     :root {
         --cell: 40px;
