@@ -1,38 +1,164 @@
-﻿name: Deploy to GitHub Pages
+﻿name: Build & Deploy Expo Web to gh-pages
 
 on:
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'dist/**'
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  deploy-to-github-pages:
+  build:
     runs-on: ubuntu-latest
     steps:
+      # 1) Checkout con LFS (importante para PNGs versionados con Git LFS)
       - uses: actions/checkout@v4
-
-      - name: Setup .NET SDK 8.0.x
-        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "8.0.x"
+          lfs: true
 
-      # Ajusta la ruta si tu .csproj no está en la raíz:
-      - name: Publish .NET Project
-        run: dotnet publish ./Sudoku.Web.csproj -c Release -o release --nologo
-
-      # Establece el base href al nombre REAL del repo (case-sensitive)
-      - name: Set base href to repo name
-        run: |
-          REPO="${{ github.event.repository.name }}"
-          sed -i "s|<base href=\"/\" />|<base href=\"/${REPO}/\" />|g" release/wwwroot/index.html
-
-      - name: SPA 404 + disable Jekyll
-        run: |
-          cp release/wwwroot/index.html release/wwwroot/404.html
-          touch release/wwwroot/.nojekyll
-
-      - name: Deploy to gh-pages
-        uses: JamesIves/github-pages-deploy-action@v4
+      # 2) Node + cache npm
+      - uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
-          folder: release/wwwroot
+          node-version: '20'
+          cache: 'npm'
+
+      # 3) Instalar deps
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      # (Opcional) Verificar LFS/archivos presentes
+      - name: Verify LFS and assets presence
+        run: |
+          git lfs ls-files || true
+          file assets/*.png || true
+
+      # 4) Diagnóstico: encontrar PNGs corruptos
+      - name: Diagnose PNGs (Jimp)
+        id: diag
+        run: |
+          set -e
+          node - <<'NODE' > bad_pngs.txt
+          const fs=require('fs'); const path=require('path'); const Jimp=require('jimp-compact');
+          const walk=(d)=>fs.readdirSync(d,{withFileTypes:true}).flatMap(de=>{
+            const p=path.join(d,de.name);
+            return de.isDirectory()?walk(p):p;
+          });
+          const files=walk(process.cwd()).filter(f=>f.toLowerCase().endsWith('.png'));
+          (async()=>{
+            let bad=[];
+            for (const f of files) {
+              try { await Jimp.read(f); }
+              catch(e){ bad.push(f); }
+            }
+            if (bad.length) console.log(bad.join('\n'));
+          })();
+          NODE
+          echo "has_bad=$( [ -s bad_pngs.txt ] && echo true || echo false )" >> $GITHUB_OUTPUT
+          echo "Bad PNGs (if any):"; cat bad_pngs.txt || true
+
+      # 5) Re-encodar SOLO los malos (tolerante a fallos)
+      - name: Re-encode bad PNGs with ImageMagick
+        if: steps.diag.outputs.has_bad == 'true'
+        continue-on-error: true
+        run: |
+          sudo apt-get update && sudo apt-get install -y imagemagick
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            echo "Fixing $f"
+            if file "$f" | grep -qi 'png image'; then
+              # Re-encode a un temporal y reemplaza solo si logra convertir
+              convert "$f" -strip PNG32:"$f.tmp" && mv "$f.tmp" "$f" || echo "convert failed, will rely on fallback: $f"
+            else
+              echo "Not recognized as PNG (maybe LFS pointer). Will rely on fallback: $f"
+            fi
+          done < bad_pngs.txt
+
+      # 6) Rechequeo
+      - name: Verify PNGs after re-encode
+        id: verify
+        run: |
+          set -e
+          node - <<'NODE' > bad_pngs_after.txt
+          const fs=require('fs'); const path=require('path'); const Jimp=require('jimp-compact');
+          const walk=(d)=>fs.readdirSync(d,{withFileTypes:true}).flatMap(de=>{
+            const p=path.join(d,de.name);
+            return de.isDirectory()?walk(p):p;
+          });
+          const files=walk(process.cwd()).filter(f=>f.toLowerCase().endsWith('.png'));
+          (async()=>{
+            let bad=[];
+            for (const f of files) {
+              try { await Jimp.read(f); }
+              catch(e){ bad.push(f); }
+            }
+            if (bad.length) console.log(bad.join('\n'));
+          })();
+          NODE
+          echo "still_bad=$( [ -s bad_pngs_after.txt ] && echo true || echo false )" >> $GITHUB_OUTPUT
+          echo "Still bad (if any):"; cat bad_pngs_after.txt || true
+
+      # 7) Fallback duro: sobrescribir los 6 assets críticos con PNGs válidos
+      - name: Overwrite critical PNG assets (fallback)
+        if: steps.verify.outputs.still_bad == 'true'
+        run: |
+          sudo apt-get update && sudo apt-get install -y imagemagick
+          mkdir -p assets
+          # 1024x1024 transparente -> icon
+          convert -size 1024x1024 xc:none PNG32:assets/icon.png
+          cp assets/icon.png assets/icon.local.png
+          # 512x512 (derivado) -> favicon
+          convert assets/icon.png -resize 512x512 PNG32:assets/favicon.png
+          cp assets/favicon.png assets/favicon.local.png
+          # 2048x2048 blanco -> splash
+          convert -size 2048x2048 xc:white PNG32:assets/splash.png
+          cp assets/splash.png assets/splash.local.png
+
+      # 8) Verificación final (debe quedar limpio)
+      - name: Final PNG check
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'); const path=require('path'); const Jimp=require('jimp-compact');
+          const walk=(d)=>fs.readdirSync(d,{withFileTypes:true}).flatMap(de=>{
+            const p=path.join(d,de.name);
+            return de.isDirectory()?walk(p):p;
+          });
+          const files=walk(process.cwd()).filter(f=>f.toLowerCase().endsWith('.png'));
+          (async()=>{
+            let bad=[];
+            for (const f of files) {
+              try { await Jimp.read(f); }
+              catch(e){ bad.push(f); }
+            }
+            if (bad.length){ console.error('BAD:', bad); process.exit(1); }
+            console.log('PNG check passed ✅');
+          })();
+          NODE
+
+      # 9) Desactivar cache de image-utils (por si hubo builds previos)
+      - name: Disable image utils cache
+        run: echo "EXPO_IMAGE_UTILS_NO_CACHE=1" >> $GITHUB_ENV
+
+      # 10) Build Expo Web -> dist/
+      - name: Build web (to dist/)
+        run: npm run web:build
+        env:
+          EXPO_APP_JSON: app.json
+
+      # 11) SPA fallback + nojekyll
+      - name: SPA fallback & nojekyll
+        run: |
+          echo '<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=./index.html"></head><body></body></html>' > dist/404.html
+          touch dist/.nojekyll
+          rm -f dist/sw.js dist/registerSW.* || true
+
+      # 12) Deploy al branch gh-pages
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          force_orphan: true
