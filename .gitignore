@@ -1,0 +1,29 @@
+# Build results
+bin/
+obj/
+build/
+docs/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# VS 
+.vs/
+
+# Rider / JetBrains
+.idea/
+
+# Logs
+*.log
+*.tlog
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Publish output
+wwwroot/dist/
+publish/

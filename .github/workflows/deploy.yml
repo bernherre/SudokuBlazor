@@ -1,0 +1,39 @@
+﻿name: Deploy Blazor Sudoku to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # o "master" si tu rama principal se llama así
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore Sudoku.Web/Sudoku.Web.csproj
+
+      - name: Build project
+        run: dotnet publish Sudoku.Web/Sudoku.Web.csproj -c Release -o build --nologo
+
+      - name: Move files for GitHub Pages
+        run: |
+          mkdir -p docs
+          cp -r build/wwwroot/* docs/
+          echo "sudoku.bernherre.github.io" > docs/CNAME || true
+
+      - name: Deploy 🚀
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
