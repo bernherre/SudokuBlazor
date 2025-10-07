@@ -15,10 +15,12 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
-      - name: Publish .NET Project (Web)
-        run: dotnet publish ./Sudoku.Web/Sudoku.Web.csproj -c Release -o release --nologo
+      # Ajusta la ruta si tu .csproj no está en la raíz:
+      - name: Publish .NET Project
+        run: dotnet publish ./Sudoku.Web.csproj -c Release -o release --nologo
 
-      - name: Set base href to repo name (case-sensitive)
+      # Establece el base href al nombre REAL del repo (case-sensitive)
+      - name: Set base href to repo name
         run: |
           REPO="${{ github.event.repository.name }}"
           sed -i "s|<base href=\"/\" />|<base href=\"/${REPO}/\" />|g" release/wwwroot/index.html
