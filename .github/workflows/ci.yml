@@ -1,4 +1,4 @@
-﻿name: Deploy Blazor to GitHub Pages
+﻿name: CI-delpoy and merge
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
         - main
         - dev
         - origin/dev
-- 
+
 permissions:
   contents: read
   pages: write
