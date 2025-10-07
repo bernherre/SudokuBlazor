@@ -21,10 +21,10 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore Sudoku.Web/Sudoku.Web.csproj
+        run: dotnet restore Sudoku.Web.csproj
 
       - name: Build project
-        run: dotnet publish Sudoku.Web/Sudoku.Web.csproj -c Release -o build --nologo
+        run: dotnet publish Sudoku.Web.csproj -c Release -o build --nologo
 
       - name: Move files for GitHub Pages
         run: |
