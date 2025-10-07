@@ -2,8 +2,11 @@
 
 on:
   push:
-    branches: [ ** ]
-
+    branches:   
+        - main
+        - dev
+        - origin/dev
+- 
 permissions:
   contents: read
   pages: write
