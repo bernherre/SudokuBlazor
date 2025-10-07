@@ -1,0 +1,82 @@
+html, body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h3 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn {
+    margin: 6px;
+    padding: 6px 14px;
+    border: none;
+    background-color: #0078d4;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn:disabled {
+        background-color: #ccc;
+        cursor: default;
+    }
+
+.sudoku-board {
+    border-collapse: collapse;
+    margin: 16px auto;
+    table-layout: fixed;
+}
+
+    .sudoku-board td {
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        border: 1px solid #000;
+    }
+
+        .sudoku-board td:nth-child(3n) {
+            border-right: 2px solid #000;
+        }
+
+    .sudoku-board tr:nth-child(3n) td {
+        border-bottom: 2px solid #000;
+    }
+
+/* Para 6x6 (2x3), usa esto en lugar de 3n:
+.sudoku-board td:nth-child(3n) { border-right: 2px solid #000; }
+.sudoku-board tr:nth-child(2n) td { border-bottom: 2px solid #000; }
+*/
+
+.cell {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    border: none;
+    outline: none;
+}
+
+    .cell.fixed {
+        background-color: #eee;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cell.editable {
+        background-color: #fff;
+    }
+
+    .cell.invalid {
+        background-color: #ffe9e9 !important;
+        box-shadow: inset 0 0 0 2px #c00;
+    }
+
+.cell-container {
+    background: white;
+}
