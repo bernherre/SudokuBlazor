@@ -1,48 +1,37 @@
-﻿name: Deploy Blazor to GitHub Pages
-
+name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
 jobs:
-  build:
+  deploy-to-github-pages:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: "8.0.x"
 
-      - name: Publish
-        run: dotnet publish ./Sudoku.Web.csproj -c Release -o build
+      # Ajusta la ruta si el .csproj no está en raíz
+      - name: Publish .NET Project
+        run: dotnet publish ./Sudoku.Web/Sudoku.Web.csproj -c Release -o release --nologo
 
-      - name: Prepare static site
+      # Pone el base al nombre exacto del repo (respeta mayúsculas)
+      - name: Set base href to repo name
         run: |
-          rm -rf dist && mkdir -p dist
-          cp -r build/wwwroot/* dist/
-          touch dist/.nojekyll
-          [ -f dist/404.html ] || cp dist/index.html dist/404.html
+          REPO="${{ github.event.repository.name }}"
+          sed -i "s|<base href=\"/\" />|<base href=\"/${REPO}/\" />|g" release/wwwroot/index.html
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Copy 404.html for SPA refresh
+        run: cp release/wwwroot/index.html release/wwwroot/404.html
+
+      - name: Disable Jekyll
+        run: touch release/wwwroot/.nojekyll
+
+      - name: Deploy to gh-pages
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          path: ./dist
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: release/wwwroot
