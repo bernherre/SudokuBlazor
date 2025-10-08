@@ -15,7 +15,7 @@ jobs:
 
       # Ajusta la ruta si el .csproj no está en raíz
       - name: Publish .NET Project
-        run: dotnet publish ./Sudoku.Web/Sudoku.Web.csproj -c Release -o release --nologo
+        run: dotnet publish ./Sudoku.Web.csproj -c Release -o release --nologo
 
       # Pone el base al nombre exacto del repo (respeta mayúsculas)
       - name: Set base href to repo name
